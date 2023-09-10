@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sean Coyle</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+  </head>
+  <body>
+    <nav class="navbar bg-body-tertiary" style="border-bottom: 1px black solid;">
+        <div class="container-fluid d-flex" style="margin-right: 20%; margin-left: 20%;">
+          <a class="navbar-brand" href="./index.html">Sean Coyle</a>
+        </div>
+      </nav>
+      <div class="" style="margin-right: 20%; margin-left: 20%; padding-top: 2%; font-size: 20px;">
+        <h1>Project - 1: Analyzing Attributes of Popular Songs on Spotify</h1>
+        <br>
+        <br>
+        <h2>Introduction</h2>
+        <p> Spotify is the world's most popular music streaming service, with just over <span><a href="https://newsroom.spotify.com/company-info/">551 Million users</a></span> (For perspective, that's the equivalent of 95% of North America having a Spotify account). I am one of those 551 million users, and I listen to a lot of music. Last year, I clocked in at nearly 90k minutes of listening! All of that was on Spotify.</p>
+        <p>I enjoy many different types of songs, each with their unique identity and traits. However, some songs are a lot more popular than others. I've always wondered why that is. What qualities make a popular song? Is it the instrumentals, the acoustics, the music's energy, or luck? </p>
+        <p>This project aims to dive into some data of Spotify's top streamed songs, see their shared traits, and answer the following questions.</p>   
+        <ol>
+            <li>What traits make a song popular?</li>
+            <li>Are songs that favor acoustics or instrumentals more popular?</li>
+            <li>How much do lyrics affect popularity? Do popular songs have more or less lyrics?</li>
+        </ol>
+        <br>
+        <h4>The Data</h4>
+        <p>The dataset <a href="https://www.kaggle.com/datasets/nelgiriyewithana/top-spotify-songs-2023">"Most Streamed Spotify Songs 2023"</a> in this project is sourced from Kaggle and is by Nidula Elgiriyewithana. It provides detailed insights into the top streamed songs on Spotify. The dataset consists of 953 rows and 24 columns. The rows each represent a unique song, each with different features.</p>
+
+        <ul>
+        <li><strong>track_name:</strong> Name of the song</li>
+        <li><strong>artist(s)_name:</strong> Name of the artist(s) of the song</li>
+        <li><strong>artist_count:</strong> Number of artists contributing to the song</li>
+        <li><strong>released_year:</strong> Year when the song was released</li>
+        <li><strong>released_month:</strong> Month when the song was released</li>
+        <li><strong>released_day:</strong> Day of the month when the song was released</li>
+        <li><strong>in_spotify_playlists:</strong> Number of Spotify playlists the song is included in</li>
+        <li><strong>in_spotify_charts:</strong> Presence and rank of the song on Spotify charts</li>
+        <li><strong>streams:</strong> Total number of streams on Spotify</li>
+        <li><strong>in_apple_playlists:</strong> Number of Apple Music playlists the song is included in</li>
+        <li><strong>in_apple_charts:</strong> Presence and rank of the song on Apple Music charts</li>
+        <li><strong>in_deezer_playlists:</strong> Number of Deezer playlists the song is included in</li>
+        <li><strong>in_deezer_charts:</strong> Presence and rank of the song on Deezer charts</li>
+        <li><strong>in_shazam_charts:</strong> Presence and rank of the song on Shazam charts</li>
+        <li><strong>bpm:</strong> Beats per minute, a measure of song tempo</li>
+        <li><strong>key:</strong> Key of the song</li>
+        <li><strong>mode:</strong> Mode of the song (major or minor)</li>
+        <li><strong>danceability_%:</strong> Percentage indicating how suitable the song is for dancing</li>
+        <li><strong>valence_%:</strong> Positivity of the song's musical content</li>
+        <li><strong>energy_%:</strong> Perceived energy level of the song</li>
+        <li><strong>acousticness_%:</strong> Amount of acoustic sound in the song</li>
+        <li><strong>instrumentalness_%:</strong> Amount of instrumental content in the song</li>
+        <li><strong>liveness_%:</strong> Presence of live performance elements</li>
+        <li><strong>speechiness_%:</strong> Amount of spoken words in the song</li>
+        </ul>
+
+        <p>Please note that the features descriptions provided by the author of the dataset</p>
+        <br>
+        <h2>Cleaning Time</h2>
+        <p>The goal of this section is to understand the data a little better and clean the set to make sure all the data that is needed is there.</p>
+
+        <p>The first step was to decide what data should be analyzed to help solve the problem. I decided that of the features provided, I was only interested in using <strong>track_name</strong>, <strong>streams</strong>, <strong>BPM</strong>, <strong>energy_%</strong>, <strong>acousticness_%</strong>, <strong>instrumentalness_%</strong>, and <strong>speechiness_%</strong> as I felt that those points would be the most relevant to this project.</p>
+        <p>However, before I could filter the data, I needed to check if there were any missing values. There were a few, but they all belonged to columns not in the desired subset, so I chose to ignore them as they would be filtered out anyway.</p>
+
+        <p>The next step was to filter the data to produce a data frame consisting of the desired data.</p>
+
+        <p>Another step in cleaning the data I would take is converting the percentages from whole numbers to a value between 0 and 1. This isn't necessarily needed; however, it cleans it up a bit and makes any visualization or data manipulation easier later on as we will be dealing with more reasonable numbers.</p>
+
+        <p>I did this step by just taking the value in the respective columns and dividing by 100.</p>
+
+        <p>After cleaning, the data looked like this:</p>
+        <img src="imgs/filtered-data.png">
+        <h3>Cleaning Summary</h3>
+        <p>To summarize the data cleaning, I did the following steps:</p>
+        <ol>
+          <li>Decide what data is relevant</li>
+          <li>Check for nulls</li>
+          <li>Filter the data</li>
+          <li>Normalize the values for percentages to help with visualization later on</li>
+        </ol>
+
+        <p>No we are ready for the fun part</p>
+
+        <br>
+        <h2>The Fun Part (Visualization)</h2>
+        <h4>Analyzing Beats Per Min</h4>
+        <p>Here, we can see that most popular songs have between 100 BPM and 140 BPM, with the median being 120 BPM.
+        <br>There are some outliers with 200 or more BPM. This data indicates that middle to faster paces songs tend to be more popular.
+        </p>
+        <img src="imgs/BPM.png" alt="">
+        <h4>Analyzing Acousticness & Instrumentalness</h4>
+        <img src="imgs/accoustic-hist.png" alt="">
+        <p>TThe accousticness of songs appears to have a decently even spread, favoring towards 0 to 40 percent of acoustic appear to make a song more popular
+        <div style="display: flex; flex-direction: row;">
+        <img src="imgs/instrumental-hist.png" alt="" width="500" height="500">
+        <img src="imgs/instrumental-scatter.png" alt="" width="500" height="500">
+        </div>
+        <p>The two above charts show that popular songs tend not to favor instrumentals, with the majority, if not all, having less then 20% in instrumentals. Reaffirming the indication that popular songs favor acoustic sound</p>
+        <p>The bigger spread of accousticnesss percentages when compared to instrumentals could indicate that songs with some level of accousticness is favored over songs that focus more on instrumentals.</p>
+        </p>
+
+        <h4>Lyrics of Popular Songs</h4>
+        <p>Speechiness percentages for popular songs appears to fall mostly into the 5% to 11% range.<br>
+        This could imply that popular songs dont necessarily need a lot of lyrics.
+        </p>
+        <img src="imgs/Speechiness-boxplot.png" alt="">
+        <p>Perhaps a case of quality over quantity however that is subjective and would require more data to analyzie that thi dataset does not provide</p>
+        <h4>Energy of Songs</h4>
+        <p>Lastly, the data for the percived energy of the most popular songs on Spotify</p>
+        <div style="display: flex; flex-direction: row;">
+         
+          <img src="imgs/energy-hist.png" alt="" width="500" height="500">
+          <img src="imgs/energy-scatter.png" alt="" width="500" height="500">
+          
+        </div>
+        <p>Interestingly enough unlike the other metrics, a lot of the songs in the set have a higher percived energy rating with majority with or greater then 50%</p>
+      
+        <h2>Story Time</h2>
+        <p>The data analuse done above shows some interesting trends in the most popular songs.<br>
+          Majority of the songs in the set have more acoustic sound rather then instrumental. Secondly less lyrics seem to make songs more popular.
+
+          <p>Perhaps the most interesting part of data discoveed, is BPM and Energy levels of songs. It appears that popular songs tend to be middle to fast pace and that corelates to perceived energy levels.<br></p>
+          <p>These findings show that a new song has a higher chance of being popular if it is fast pace and high energy. Accousticness, Instrumentalness, Lyrics appear to not be as impactful as Energy and BPM<br>This answers my original questions, showing what traits makes a song popular</p>
+      
+          <h2>Impact</h2>
+          <p>The potential impact of this analisis could affect two major areas I think.<br>The first area is the music industry. This could show artists that if they focus on high energy songs it could pottentialy become more popular.</p>
+          <p>However this segways to the one potential negative impact. If artists focus more on just songs that become popular. It could pottentialy impact the creative aspect of music and just limit new songs to a bunch of music that sounds the same taking away the uniqueness of songs</p>
+          <p>the second area is music streaming recomendations. If one song shares the similar traits as another popular song. It could be better reccomeneded to users. </p>
+
+          <h2>References</h2>
+          <ul>
+            <li>https://www.kaggle.com/datasets/nelgiriyewithana/top-spotify-songs-2023</li>
+            <li>https://newsroom.spotify.com/company-info/</li>
+            <li>https://matplotlib.org/stable/index.html</li>
+            <li>https://pandas.pydata.org/docs/</li>
+          </ul>
+
+          <h2>Code</h2>
+          <p>All Code, along with the Jupeter Notebook Version of this Page can be found <a href="https://github.com/sean-coyle/portfolio-articles-code/blob/main/Project-1/project-1.ipynb">here</a> </p>
+        </div>
+
+      
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+  </body>
+</html>
