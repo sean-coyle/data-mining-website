@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sean Coyle</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+  </head>
+  <body>
+    <nav class="navbar bg-body-tertiary" style="border-bottom: 1px black solid;">
+        <div class="container-fluid d-flex" style="margin-right: 20%; margin-left: 20%;">
+          <a class="navbar-brand" href="./index.html">Sean Coyle</a>
+        </div>
+      </nav>
+      <div class="" style="margin-right: 20%; margin-left: 20%; padding-top: 2%; font-size: 20px;">
+        <h1>Project - 2: Classification of Breast Cancer Tumors</h1>
+        <br>
+        <br>
+        <h4>Introduction</h4>
+        <p>Breast Cancer is one of the most common types of cancer impacting both men and women. Cancer cells form tumors that can either be cancerous (malignant) or noncancerous (benign).</p>
+        <p>This project aims to build a model that can classify tumors as cancerous or not based on the physical traits of labeled tumors. Provided by the following dataset.</p>
+
+        <h4>Introduce the Data</h4>
+        <p>The data used for this project is sourced from the <a href="https://www.kaggle.com/datasets/yasserh/breast-cancer-dataset" target="_blank">Breast Cancer Dataset</a> from Kaggle produced by user M Yasser H.</p>
+        <p>It consists of one CSV with 569 rows and 32 columns. It provides information on the diagnosis of the tumor, the texture, measurements on certain tumor traits such as the radius of lobes, and even the concavity of the cancer.</p>
+        <img src="imgs/p2-dataset-table.png" alt="", width="90%">
+        <br>
+        <br>
+        <h4>Data Pre-Processing</h4>
+        <p>The goal here is to check the data for any missing values, clean the data of any data that is not relevant, and then prep it to get ready for creating a classification model.</p>
+        <p>The first few steps were simple enough, I checked the shape of the dataset (569, 32)</p>
+        <p>I also checked the info of the dataframe to get a better understanding of the datatypes used as well as checked for any nulls</p>
+        <div style="display: flex; flex-direction: row;">
+         
+            <img src="imgs/p2-info.png" alt="" height="50%" style="padding-right: 20px">
+            <img src="imgs/p2-isnull.png" alt="" height="30%">
+            
+        </div>
+        <p>The dataset consists primarily of numeric values and contains no nulls. That's neat so the only real preparation that needs to be done is dropping unneeded columns and then converting the non-numeric values in diagnosis into numeric values using one hot encoding</p>
+        <p>I dropped the Id column as it was irrelevant to the data and only served as a unique id for the tumor data. The last step used the get_dummies function to convert the diagnosis column into 1 and 0 instead of M and B. I decided to drop the first since there are only two classes the data could fall into. If a diagnosis is 0 for diagnosis m, it implies 1 for diagnosis b. After the data cleaning, the set looked as follows.</p>
+        <img src="imgs/p2-after-cleaning.png" alt="" width="90%">
+        <h4>Data Visualization</h4>
+        <p>The first thing I wanted to see was a quick overview of where the features related to each other to see if I could see anything that might help indicate what classification algorithm to use later on.</p>
+        <p>I use seaborn pairplot function to produce the following</p>
+        <img src="imgs/p2-seaborn.png" alt="" width="90%">
+        <p>Interestingly, it seems that for some features, there are well-defined clusters of data indicating that KNN could potentially be an excellent model to use, but since the size of the dataset is relatively large, I don't think I have the computational resources to use KNN. So, I'm leaning towards using a basic decision tree. </p>
+        <p>I was curious to see what features were more impactful then others</p>
+        <img src="imgs/p2-feature-importance.png" alt="" width="90%">
+        <p>It appears that cancavity and the overall size of the tumor impacts wiether or not a tumor is cancerous or not</p>
+        <h4> Modeling </h4>
+        <p>I decided that since this was a relatively basic binary classification problem that a standard desicion tree would be best.</p>
+        <p>I started with spliting the data into test and training sets by doing the following</p>
+        <img src="imgs/p2-training.png" alt="">
+        <p>I then created a new instance of the DecisionTreeClasifier and fit the training data to it. Receiveing a testing score of .90 in predeticing if a tumor is cancerous</p>
+        <img src="imgs/p2-tree.png" alt="" width="100%">
+        <h2>Model Evaluation</h2>
+        <p>I used cross-validation to determine the performance of the model. The model performed well when predicting tumors that are cancerous and non-cancerous tumors.</p>
+        <img src="imgs/p2-eval.png" alt="">
+        <h4>Story Telling</h4>
+        <p>The above data shows some interesting insights into traits of tumors and what makes it cancerous. It seems that concavity and size impact if a tumor is cancerous the most</p>
+        <p> The model did a better job determining non-cancerous cells, which is interesting since that was a small percentage of the dataset, so there is less data to train off of.</p>
+        <h2>Impact</h2>
+          <p>The impact of this project is that is that it allows people to better understand the traits that make up a cancerous tumor in Breast Cancer</p>
+          <p>This data and model could also help predict and classify tumors for other cancers as well and give further insight to those as well</p>
+          <p>I would be interested in seeing another dataset for a different type of cancer and seeing if the feature importances end up being the same</p>
+
+          <p>The major negative impact of this is that given the high rating of success with this model. It might be taken as the truth when determining if a tumor is cancerous or not. </p>
+          <p>This model is not a doctor and cant give insight into other determining factors such as health history and tests on the physical tumor so although it is an accurate model it shouldnt be taken as 100% turthful</p>
+
+          <h2>References</h2>
+          <ul>
+            <li>https://www.kaggle.com/datasets/yasserh/breast-cancer-dataset</li>
+            <li>https://seaborn.pydata.org/</li>
+            <li>https://pandas.pydata.org/docs/</li>
+          </ul>
+
+          <h2>Code</h2>
+          <p>All Code, along with the Jupeter Notebook Version of this Page can be found <a href="https://github.com/sean-coyle/portfolio-articles-code/blob/main/Project-2/project-2.ipynb">here</a> </p>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+  </body>
+</html>
