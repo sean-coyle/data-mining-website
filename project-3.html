@@ -13,64 +13,207 @@
         </div>
       </nav>
       <div class="" style="margin-right: 20%; margin-left: 20%; padding-top: 2%; font-size: 20px;">
-        <h1>PROJECT 3 - Looking into house price prediction, Regression</h1>
+        <h1>PROJECT 3 - Regression: Housing Market Data</h1>
         <h2>Introduction to the Problem</h2>
-        <p>Housing markets vary depending on a lot of different features, making it challenging to predict housing sale costs. The goal of this project is to explore a housing data dataset, use regression techniques to try and figure out what features impact housing prices the most, and train a model to predict the price of a house.</p>
+        <p>Housing Markets are constantly looked at by everyone from families trying to buy a home to real estate agents and investors. The price of a home is something people always try to predict when buying or selling a house. The potential price varies on multiple features, making it difficult to do so.</p>
+        <p>The goal of this project is to explore a dataset of housing information for houses that have sold and use regression techniques to try to create a model that can accurately predict the potential sale price of a home. </p>
         <h4>The Data</h4>
-        <p>The dataset comes from the Kaggle competition titled "House Prices: Advanced Regression Techniques." The data consists of a training set of size (1460, 81), where:</p>
-        <ul>
-            <li>1460 represents the number of house sale records.</li>
-            <li>81 columns represent various features of these houses and their sale details. This includes:</li>
-            <ul>
-                <li><strong><em>SalePrice</em></strong>: the target feature - the property's sale price in dollars</li>
-                <li>Other features include quality, fireplaces, driveways, and other features you would expect in a house.</li>
-            </ul>
+        <p>The dataset comes from the Kaggle competition titled "House Prices: Advanced Regression Techniques." The data consists of a training set of 81 features and just over 1400 data samples. </p>
+          <p>The features describe different conditions of the house, such as the area of the lot, overall quality, and number of bedrooms. Since there are 81 unique features, I will not list them all, but here are a few and their descriptions from the <a href="https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/rules">Kaggle Page</a> where you can find the rest.</p>
+          <ul>
+            <li>SalePrice - the property's sale price in dollars. This is the target variable that you're trying to predict.</li>
+            <li>MSSubClass: The building class</li>
+            <li>MSZoning: The general zoning classification</li>
+            <li>LotFrontage: Linear feet of street connected to property</li>
+            <li>LotArea: Lot size in square feet</li>
+            <li>Street: Type of road access</li>
+            <li>Alley: Type of alley access</li>
+            <li>LotShape: General shape of property</li>
+            <li>LandContour: Flatness of the property</li>
+            <li>Utilities: Type of utilities available</li>
+            <li>LotConfig: Lot configuration</li>
+            <li>LandSlope: Slope of property</li>
+            <li>Neighborhood: Physical locations within Ames city limits</li>
+            <li>Condition1: Proximity to main road or railroad</li>
+            <li>Condition2: Proximity to main road or railroad (if a second is present)</li>
+            <li>BldgType: Type of dwelling</li>
         </ul>
+        
         <h2>What is Regression?</h2>
         <p>Regression is a machine learning technique examining the relationship between independent and dependent variables. By fitting a model to data, it can predict the expected value of a dependent variable based on a set of trained data.</p>
-        <p>This project uses two forms of Regression: Linear and polynomial Regression. Linear regression handles linear relationships, while polynomial regression handles continuous relationships that might not be easily described as linear.</p>
-        
-        <h2>Experiment 1:</h2>
+        <p>This project uses two form of regression: linear regression and logistic regression. Linear regression handles linear relationships and is what most of this project uses. <br>Y = mx + b</p>
+
+        <h2>Experiment 1: Data Understanding</h2>
+        <p>Experiment 1 focuses on analyzing features, cleaning, and creating a regression model. We look at the correlations of features, the data frame values that need to be cleaned by one hot encoding and filling in null values.</p>
         <h4>Correlation Map</h4>
-        <img src="imgs/p3-corr-heatmap.png" alt="" height="900px", width="900px">
-        <p> The next part was understanding what features impacted the target the most. I first tried to take a look at the heatmap, but there is a lot of potential features. In summary, the most significant features are as follows:</p>
-        <img src="imgs/p3-top-corr.png" alt="">
+        <p>To get a good understanding of the data and the dataset's features. We can look at the correlation map to get a good overview of how the features relate to each  other specifically the target value, SalePrice.</p>
+        <img src="imgs/p3-corr-heatmap.png" alt="" height="800px", width="100%">
+        <p>Theres a lot of information in this heatmap, but for better understanding, I just wanted to list out the most essential features regarding correlation with SalePrice. which are as follows:</p>
+        <ol>
+          <li>OveralQual: .79</li>
+          <li>GrLivAra: .70</li>
+          <li>GarageCars: .64</li>
+          <li>GarageArea: .62</li>
+          <li>TotalBsmtSF: .61</li>
+        </ol>
+        
+        <p>Some features clearly impact SalePrice more then others. Additionaly some features have high correlation with each other but not the SalePrice. This is worth noting as it might be relevent in data cleaning steps later in the project</p>
+        <p>With this we have some more understanding of whats in the dataset, and how they realate to the target</p>
+        <p>More insight to the dataset and its features were shown in the pre-processing steps below</p>
+        
         <h4>Experiment 1: Pre-processing</h4>
-        <p>The first thing done was to load the dataset and look at the datatypes. Off the bat, I noticed a lot of non-numeric datatypes indicating that some form of one-hot encoding would be needed.</p>
-        <img src="imgs/p3-cleaning-1.png" alt="">
-        <p>I also checked for a list of columns that had any null values as well as dropped the ID column. I noticed many columns had null values, but after further inspection, those values that did have null values were false nulls. The NA values represent the lack of that feature in the home, not the lack of data in that field.</p>
+        <p>The first step in the pre-processing process for me was to load the dataset and check to see if there were any null values, along with the overall datatypes for each feature to get a clearer understanding of the type of data we are dealing with. </p>
+        <div class="d-flex">
+          <div class="flex-fill p-2">
+            <img src="imgs/p3/p3-df-info.png" alt="" width="100%">
+          </div>
+          <div class="flex-fill p-2">
+            <img src="imgs/p3/p3-df-nulls.png" alt="" width="100%">
+          </div>
+        </div>
+        <p>From the image above we see we have mostly string based features along with numerical values mixed. This indicates both categorical values we will need to deal with and numeric values.</p>
+        <p>Additionally, we see that some columns do have null values. Taking a deeper look we see 18 columns have null values total</p>
+        <img src="imgs/p3/p3-df-nulls-detail.png" alt="" width="100%">
+        <p>I ended up charting some null features to see what values existed in these null columns. This revealed that a lot of the features are categorical items that, when null, indicate that the feature is not present in the house. Take the example below for Alley.</p>
+        <img src="imgs/p3/p3-alley-graph.png" alt="" width="100%">
+        <p>Here we see two options Grvl and Pave, however this feature has a lot of missing values. These values are not actually null values, just show null because most houses do not have an Alley, therefore dont have a alley type.</p>
+
+        <p>So that answers the question regarding categorical nulls, but what about numerical null values?</p>
+        <p>Similar thought process was taken for the numerical values. Take the feature pool area for exmaple. If a house dosent have a pool then the area is 0</p>
+        <p>0 in this instance isnt a missing value, but a indicator that there is no pool</p>
+        <p>The rest of the steps for cleaning the data are now:</p>
+        <ol>
+          <li>One hot encoding for categorical data using pandas get dummies</li>
+          <li>Fill in null values with 0 for numeric values</li>
+        </ol>
+
+        <p>Additionally I noticed that the feature MSSubClass refers to classification types, according to the Kaggle Page. So before one hot encoding the categorical features, I had to convert the type to a string so it would be included as well</p>
+        <p>After one hot encoding and filling in nulls I have a cleaned dataframe that looks like this</p>
+        <img src="imgs/p3/p3-cleaned-df.png" width="100%">
+        <p>Now that we have a clean dataset, lets get to modeling!</p>
         <h4>Experiment 1: Modeling</h4>
-        <p>For Experiment one, I built a model to predict the sale of a house based on the most impactful feature OveralQual. I used sklearns LinearRegression model to do so. I split the data into training and test sets and then passed that into the prediction model. </p>
-        <img src="imgs/p3-ex1.png" alt="">
-        <h4>Experiment 1: Evaluation </h4>
-        <p>To evaluate the model, I used both MSE and RMSE. In general lower values indicates a better fit and considering the graph above I suspect a poor fit</p>
-        <img src="imgs/p3-eval-ex1.png" alt=""> <p>These values do indicate a very poor performing model which I try to fix in Experiment 2</p>
+        <p>First I wanted to visualize some of the features against our target to see what model might fit best</p>
+        <div class="d-flex">
+          <div class="flex-fill p-2">
+            <img src="imgs/p3/p3-ex1-graph1.png" alt="" width="100%">
+          </div>
+          <div class="flex-fill p-2">
+            <img src="imgs/p3/p3-ex1-graph2.png" alt="" width="100%">
+          </div>
+        </div>
 
+        <p>From these graphs it appears that a linear model will work well.</p>
+        <p>For experiment 1 I wanted to focus on the realtionship of the highest correlated item OverallQual.</p>
+        <p>I split the dataset into a 20:80 test train ratio and fit to a linear model as seen in the code snippit below</p>
+
+        <div class="container mt-5">
+          <pre class="pre-scrollable bg-light p-3 border"><code>
+  X = df_cleaned[['OverallQual']]
+  y = df_cleaned['SalePrice']
+  
+  X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=.2, random_state=42)
+  
+  lr = linear_model.LinearRegression()
+  
+  lr.fit(X_train, y_train)
+  
+  y_pred = lr.predict(X_test)
+          </code></pre>
+      </div>
+
+      <h4>Experiment 1: Evaluation </h4>
+        <p>To evaluate the models' performance, I used two metrics, MSE and RMSE. MSE and RMSE look at the distance from the point to the line, as seen in the graph below. For MSE and RMSE lower tend to be better as it indicates a better fit.</p>
+        <img src="imgs/p3/p3-ex1-model.png" alt="" width="100%">
+        <p>Based on the graph it looks like a linear model fits well but is a poor fitting model</p>
+        <p>Looking the the MSE and RMSE scores of 2681026163 & 51778 respectivly indicate that the model is in fact a poor fit.</p>
         <h2>Experiment 2</h2>
-        <p>For experiment two, I wanted to take a different approach to what features I was taking in for the X values of the model. Instead of just one key feature, I used all features except for the target feature.</p>
+        <p>For experiment two, I wanted to see if training the model with more features would result in a better fit.</p><p>So, I followed the same steps, used the same preprocessing procedures, and kept the 20:80 split for training data. Only difference is X contained all features except the target</p>
+        <div class="container mt-5">
+          <pre class="pre-scrollable bg-light p-3 border"><code>
+  X = df_cleaned.copy().drop(columns='SalePrice')
+  y = df_cleaned['SalePrice']
+  
+  X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=.2, random_state=42)
+  
+  lr = linear_model.LinearRegression()
+  
+  lr.fit(X_train, y_train)
+  
+  y_pred = lr.predict(X_test)
+          </code></pre>
+      </div>
 
-        <p>Additionally, I split the data in a 20/80 split for testing and training. For experiment 2, I still used a linear regression model. Allowing for more features to be trained off of did improve the model. However, not by much, with a new RMSE value of 31305. The model is fitting better but still needs improvement. This made me want to try using polynomial regression instead. </p>
+      <p>Unexpectedly, experiment 2's model resulted in a higher MSE and RMSE. With an MSE score of 496678913 and a RMSE of 70475,  indicating a worse fit.</p>
+      
+      <h2>Experiment 3</h2>
+      <p>Since more features semm to of worsen the fitting of the model, I wanted to try two more things for the last experiment.</p>
+      <ol>
+        <li>Change the model from linear to logistic</li>
+        <li>Reclean the data and remove redudency</li>
+      </ol>
+      <p>Changing the model to a logistic model might result in a better fit. Most of the change for experiment 3 will be from recleaning the dataset.</p>
+      <p>Most of the steps are the same as before. However, after looking back at the descriptions of features on the Kaggle page, I noticed a lot of overlap, indicating potential redundancy—something I should've caught earlier. </p>
+      <p>
+        So, in addition to the previous cleaning steps of filling in nulls and one hot encoding. I will drop a manually selected list of columns I feel are redundant. In hopes of improving the performance of the model</p> 
+        <div class="container mt-5">
+          <pre class="pre-scrollable bg-light p-3 border"><code>
+  col_to_drop = [
+  'GarageYrBlt', 
+  'YrSold', 
+  'GarageCars', 
+  'BedroomAbvGr',
+  'KitchenAbvGr', 
+  'BsmtHalfBath', 
+  'BsmtFullBath', 
+  'GarageCond',
+  'LotFrontage',
+  'MoSold',
+  'MiscVal',
+  'ScreenPorch',
+  'GarageFinish',
+  '1stFlrSF',
+  '2ndFlrSF',
+  'TotRmsAbvGrd',
+  'OverallQual',
+  ]
 
-        <h2>Experiment 3</h2>
-        <p>For experiment three, I only used the top 5 features in the set that had the greatest correlation. I kept the 20/80 split but changed the model form linear to polynomial</p>
+df_cleaned_ex3 = df_cleaned_copy.drop(columns=col_to_drop)
 
-        <p>Supprisingly the model performed significantly worse! scoreing MSE and RMSE scores of 1.0369585121774155e+20 and 10183115987.640598 respectivly</p>
+df_cleaned_ex3 = clean(df_cleaned_ex3)
 
-        <h2>Impact</h2>
-        <p>Having a model that can predict sales prices of houses can be used in Real Estate Market Analysis and also help real estate investors and marketers figureout potential costs of a home. </p>
+X = df_cleaned_ex3.copy().drop(columns='SalePrice')
+y = df_cleaned_ex3['SalePrice']
 
-        <p> Negative impacts could include potentially being used to only create houses that produce the highest potential sale price, which can potentially outprice people out of owning a home. </p>
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=.2, random_state=42)
+
+lr = linear_model.LogisticRegression(max_iter=1000)
+
+lr.fit(X_train, y_train)
+
+y_pred = lr.predict(X_test)
+          </code></pre>
+      </div>
+      <p>The resulting model had the MSE and RMSE of 3593589425 and MSE of 59946.</p>
+      <p>This isnt the best model for MSE and RMSE scores. It does better then experiment 2 but worse then experiment 1, however it does indicate that further data cleaning and dimension reduction could imrpove future models as well.</p>
+      <h2>Impact</h2>
+        <p>The potential impact of this project is that it could help individuals predict the possible price of a home. It could help individuals find a home in their price range or, when selling, help accurately predict the cost of selling a home. </p>
+        <p>Negative impacts are that real estate agents or real estate companies could take a look at the features of a home to maximize the sale price of a future property or existing properties. This could outprice people of owning a home in a market that makes it difficult to do already.</p>
         <h2>Conclussion</h2>
-        <p>This project gave productive insights into linear regression and how to set up a model. Some features impact model performance more than others. As well as different models are used in different instances.
-
-            If I were to go back and redo some experiments, I think I would do feature selection differently. And spend more time focusing on improving model performance.  </p>
+        <p>The regression project gave further insights into the data cleaning process along with how regression works both linearly and logistically.</p>
+        <p>Additionally, this project looked at housing data and showed that some features impact the prices of a house more than others. As well as some regression models perform better on specific datasets depending on the type of relationship.</p>
+        <p>
+          If I were to go back and redo some experiments. I would focus more time on reducing features as experiment 3 showed promise in improving model performance. Additionally, I would like to explore polynomial regression further as well.</p>
         <h2>References</h2>
           <ul>
             <li>https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/rules</li>
             <li>https://seaborn.pydata.org/</li>
             <li>https://pandas.pydata.org/docs/</li>
-            <li>https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.PolynomialFeatures.html</li>
-            <li>https://towardsdatascience.com/polynomial-regression-bbe8b9d97491</li>
+            <li>https://medium.com/@filip.sekan/3-ways-how-to-update-data-type-of-columns-in-pandas-97ddb5f32ae4</li>
+            <li>https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.nunique.html#pandas.DataFrame.nunique</li>
+            <li>https://datascienceparichay.com/article/pandas-count-of-unique-values-in-each-column/</li>
+            <li>https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html</li>
+            <li>https://towardsdatascience.com/the-ultimate-guide-to-data-cleaning-3969843991d4</li>
+            <li>Data Cleaning Example Notebook (Canvas)</li>
           </ul>
 
           <h2>Code</h2>
