@@ -47,7 +47,7 @@
         <p>Experiment 1 focuses on analyzing features, cleaning, and creating a regression model. We look at the correlations of features, the data frame values that need to be cleaned by one hot encoding and filling in null values.</p>
         <h4>Correlation Map</h4>
         <p>To get a good understanding of the data and the dataset's features. We can look at the correlation map to get a good overview of how the features relate to each  other specifically the target value, SalePrice.</p>
-        <img src="imgs/p3-corr-heatmap.png" alt="" height="800px", width="100%">
+        <img src="imgs/p3-corr-heatmap.png" alt="" height="800px", width="60%">
         <p>Theres a lot of information in this heatmap, but for better understanding, I just wanted to list out the most essential features regarding correlation with SalePrice. which are as follows:</p>
         <ol>
           <li>OveralQual: .79</li>
@@ -65,17 +65,17 @@
         <p>The first step in the pre-processing process for me was to load the dataset and check to see if there were any null values, along with the overall datatypes for each feature to get a clearer understanding of the type of data we are dealing with. </p>
         <div class="d-flex">
           <div class="flex-fill p-2">
-            <img src="imgs/p3/p3-df-info.png" alt="" width="100%">
+            <img src="imgs/p3/p3-df-info.png" alt="" width="50%">
           </div>
           <div class="flex-fill p-2">
-            <img src="imgs/p3/p3-df-nulls.png" alt="" width="100%">
+            <img src="imgs/p3/p3-df-nulls.png" alt="" width="50%">
           </div>
         </div>
         <p>From the image above we see we have mostly string based features along with numerical values mixed. This indicates both categorical values we will need to deal with and numeric values.</p>
         <p>Additionally, we see that some columns do have null values. Taking a deeper look we see 18 columns have null values total</p>
-        <img src="imgs/p3/p3-df-nulls-detail.png" alt="" width="100%">
+        <img src="imgs/p3/p3-df-nulls-detail.png" alt="" width="50%">
         <p>I ended up charting some null features to see what values existed in these null columns. This revealed that a lot of the features are categorical items that, when null, indicate that the feature is not present in the house. Take the example below for Alley.</p>
-        <img src="imgs/p3/p3-alley-graph.png" alt="" width="100%">
+        <img src="imgs/p3/p3-alley-graph.png" alt="" width="50%">
         <p>Here we see two options Grvl and Pave, however this feature has a lot of missing values. These values are not actually null values, just show null because most houses do not have an Alley, therefore dont have a alley type.</p>
 
         <p>So that answers the question regarding categorical nulls, but what about numerical null values?</p>
@@ -89,16 +89,16 @@
 
         <p>Additionally I noticed that the feature MSSubClass refers to classification types, according to the Kaggle Page. So before one hot encoding the categorical features, I had to convert the type to a string so it would be included as well</p>
         <p>After one hot encoding and filling in nulls I have a cleaned dataframe that looks like this</p>
-        <img src="imgs/p3/p3-cleaned-df.png" width="100%">
+        <img src="imgs/p3/p3-cleaned-df.png" width="50%">
         <p>Now that we have a clean dataset, lets get to modeling!</p>
         <h4>Experiment 1: Modeling</h4>
         <p>First I wanted to visualize some of the features against our target to see what model might fit best</p>
         <div class="d-flex">
           <div class="flex-fill p-2">
-            <img src="imgs/p3/p3-ex1-graph1.png" alt="" width="100%">
+            <img src="imgs/p3/p3-ex1-graph1.png" alt="" width="50%">
           </div>
           <div class="flex-fill p-2">
-            <img src="imgs/p3/p3-ex1-graph2.png" alt="" width="100%">
+            <img src="imgs/p3/p3-ex1-graph2.png" alt="" width="50%">
           </div>
         </div>
 
@@ -123,7 +123,7 @@
 
       <h4>Experiment 1: Evaluation </h4>
         <p>To evaluate the models' performance, I used two metrics, MSE and RMSE. MSE and RMSE look at the distance from the point to the line, as seen in the graph below. For MSE and RMSE lower tend to be better as it indicates a better fit.</p>
-        <img src="imgs/p3/p3-ex1-model.png" alt="" width="100%">
+        <img src="imgs/p3/p3-ex1-model.png" alt="" width="50%">
         <p>Based on the graph it looks like a linear model fits well but is a poor fitting model</p>
         <p>Looking the the MSE and RMSE scores of 2681026163 & 51778 respectivly indicate that the model is in fact a poor fit.</p>
         <h2>Experiment 2</h2>
