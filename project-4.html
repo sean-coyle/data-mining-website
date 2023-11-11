@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sean Coyle</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+  </head>
+  <body>
+    <nav class="navbar bg-body-tertiary" style="border-bottom: 1px black solid;">
+        <div class="container-fluid d-flex" style="margin-right: 20%; margin-left: 20%;">
+          <a class="navbar-brand" href="./index.html">Sean Coyle</a>
+        </div>
+      </nav>
+      <div class="" style="margin-right: 20%; margin-left: 20%; padding-top: 2%; font-size: 20px;">
+       <h1>Project 4: Further Exploration of Breast Cancer Data Using Clustering</h1>
+       <h2>Introduce the Problem</h2>
+       <p>Cancer affects hundreds of thousands of people in the United States and millions worldwide. Breast Cancer is one of the most common types of Cancer impacting both men and women; however, it is more common in women.</p>
+       <p>This project intends to better look at the Breast Cancer dataset I previously looked at in my article Project 2: Classification of Breast Cancer Tumors.</p>
+       <p>The main goals of this project are to explore clustering techniques such as K-Means and agglomerative clustering to explore traits that determine if a cancer is cancerous (malignant) or noncancerous (benign).</p>
+       
+       <h2>What is Clustering and How Does It Work?</h2>
+       <p>Clustering is a method used in data analytics and machine learning to group similar data points.</p>
+       <h4>K-Means Clustering:</h4>
+       <p>K-means is a simple iterative algorithm to cluster data groups together and is done by the following steps.</p>
+       <ol>
+        <li>Determine the number of k clusters.</li>
+        <li>Initialize k centroids</li>
+        <li>Calculate the Euclidean distance for each data point to its closest centroid</li>
+        <li>Update the centroids' position</li>
+       </ol>
+       <p>If the centroids have changed, repeat the steps until the centroids no longer adjust. </p>
+       <br>
+
+       <h4>Agglomerative Clustering:</h4>
+       <p>Agglomerative clustering is another algorithm, but instead of having a set number of clusters, it treats each point as an individual cluster.</p>
+       <ol>
+        <li>It groups clusters based on pairwise distances.</li>
+        <li>The nearest clusters merge. </li>
+       </ol>
+       <p>The process repeats until no more clusters change.</p>
+       
+       <h2>Introduce The Data</h2>
+        <p>The dataset used for this project is sourced from Kaggle and is the same one previously used in Project 2: Classification. </p>
+        <p>It provides information on various traits of tumors, such as diagnosis, radius, texture, concavity, and more, as well as the mean for these features. It contains 32 unique columns and holds 569 samples. </p>  
+       <p> A full list of the features and descriptions, as well as the dataset itself, can be found on Kaggle <a href="https://www.kaggle.com/datasets/yasserh/breast-cancer-dataset" target="_blank">here.</a></p>    
+
+       <h2>Data Visualization & Understanding</h2>
+       <p>To understand the data and see how I could apply clustering techniques to it I first wanted to understand the type of data in the dataset. The dataset consists of mostly numeric values and one character value.</p>
+       <div class="d-flex justify-content-center align-items-center">
+        <img src="imgs\p2-info.png" alt="" width="50%", height="50%">
+       </div>
+       <p>Secondly I wanted to graph all the data points, using sns pairplot, to see if there were any natural clusters already in the dataset and have a better understanding of how the data relates</p>
+       <img src="imgs/p4/pairplot.png" alt="", width="100%">
+       <p>Thats a lot of data, it also gives a good indicator of how each of the features realte to eachother for a closer look we can look at the following:</p>
+       <div class="d-flex">
+        <div class="flex-fill p-2">
+          <img src="imgs/p4/data-visual-1.png" alt="" width="100%">
+        </div>
+        <div class="flex-fill p-2">
+          <img src="imgs/p4/data-visual-2.png" alt="" width="100%">
+        </div>
+      </div>
+      <p>These two figures help show the two clusters of data however it is hard to tell where things overlap.</p>
+      <div class="d-flex">
+        <div class="flex-fill p-2">
+            <img src="imgs/p4/heatmap.png" alt="">
+        </div>
+        <div class="flex-fill p-2">
+         <p>The last bit of Visualization I wanted to do was see if any features correlated with the target more then others</p>
+         <p>As seen with the heatmap, there are not really any features that have a low correlation to the target feature</p>
+        </div>
+      </div>
+
+      <h3>Pre-Processing</h3>
+      <p>For pre-processing, I implemented the following steps.</p>
+      <ol>
+        <li>Check to see if there were null values.</li>
+        <li>Perform one-hot encoding on the target value diagnosis</li>
+        <li>Drop ID column</li>
+      </ol>
+
+      <p>This dataset had no null values; all data points had a value, so this step was simple. The only real pre-processing I had to do was convert the object data diagnosis into a numeric value by one hot encoding since the diagnosis was a binary, whether cancerous or not cancerous; encoding it to 1 or 0 gives the same effect and simplifies the dataset.</p>
+      <p>Additionally, in preparation for clustering algorithms, I performed PCA on the data frame and looked to see if it impacted clarity in the dataset. </p>
+      <div class="d-flex justify-content-center align-items-center">
+        <img src="imgs\p4\PCA-1.png" alt="" width="50%", height="50%">
+    </div> 
+    
+    <h3>Clustering</h3>
+    <p>I wanted to implement both K-means and Agglomerative Clustering as I wanted to explore if the results varied. </p>
+    <h5>K-Means</h5>
+    <p>For k-means, I first implemented the elbow method to find the number of clusters needed. From the dataset, it's clear that two clusters would be the most likely result; however, I wanted to verify this. As seen below, we see the sudden decrease of rate around the k = 2 mark, indicating that the assumption of 2 clusters is correct. </p>
+    <p>Lastly, I used the sklearns KMeans method to perform the k-means algorithm on the dataset containing all features except for the target values. The results of that show a clear clusterization and a small gap between the two clusters. </p>
+    <div class="d-flex">
+        <div class="flex-fill p-2">
+          <img src="imgs/p4/elbow.png" alt="" width="100%">
+        </div>
+        <div class="flex-fill p-2">
+          <img src="imgs/p4/k-means.png" alt="" width="100%">
+        </div>
+    </div>
+    
+    <h5>Agglomerative</h5>
+    <p>
+        I wanted to see if Agglomerative Clustering yielded different results. So, using 2 clusters as determined earlier with the method, I used the SKlearns library for Agglomerative on the dataset. The results did differ, and the groupings seem more well-defined.</p>
+        <div class="d-flex justify-content-center align-items-center">
+            <img src="imgs\p4\agglomerative.png" alt="" width="50%", height="50%">
+        </div> 
+    <h3>Story Telling</h3>
+    <p>
+        Between the two clustering techniques, I further explored the dataset and saw what features determine if a tumor is benign or not. 
+        The results clearly show that a lot of the data falls into the cancerous cluster and tends to be tightly grouped together. However, based on the K-means clustering, the noncancerous group has more outliers, indicating that the cancerous tumor features are more correlated with each other. </p>
+        <p>Additionally one of the main goals of this project was to further explore the data and see if its clearer then the results of project 2. I do think that by visualzing the clusters, this helps show the groups of data and predications better.</p>
+        
+        <h3>Impact</h3>
+        <p>Although knowing what traits make a tumor cancerous or not can be helpful. As I said in the impact section last time I looked at this data. A model is not a healthcare professional and the main potential negative impact I see is someone using this information to determine their own health issues which could lead to misdiagnosis.</p>
+        <h2>References</h2>
+        <ul>
+            <li>https://www.kaggle.com/datasets/yasserh/breast-cancer-dataset</li>
+            <li>https://seaborn.pydata.org/</li>
+            <li>https://pandas.pydata.org/docs/</li>
+            <li>https://scikit-learn.org/stable/auto_examples/cluster/plot_agglomerative_dendrogram.html</li>
+            <li>https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html</li>
+            <li>https://scikit-learn.org/stable/modules/clustering.html#k-means</li>
+            <li>https://www.kaggle.com/code/kashnitsky/topic-7-unsupervised-learning-pca-and-clustering/notebook</li>
+            <li>https://acsjournals.onlinelibrary.wiley.com/doi/10.3322/caac.21763</li>
+        </ul>
+        <h2>Code</h2>
+          <p>All Code, along with the Jupeter Notebook Version of this Page can be found <a href="https://github.com/sean-coyle/portfolio-articles-code/blob/main/Project-4/project-4.ipynb">here</a> </p>
+        </div>
+          <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+  </body>
+</html>
