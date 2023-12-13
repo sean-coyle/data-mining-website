@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sean Coyle</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+  </head>
+    <body>
+        <nav class="navbar bg-body-tertiary" style="border-bottom: 1px black solid;">
+            <div class="container-fluid d-flex" style="margin-right: 20%; margin-left: 20%;">
+            <a class="navbar-brand" href="./index.html">Sean Coyle</a>
+            </div>
+        </nav>
+            <div class="" style="margin-right: 30%; margin-left: 20%; padding-top: 2%; font-size: 20px;">
+            <h3>ITCS-3162 Final Project</h3>
+            <h1>Diabetes Classification</h1>
+            <hr>
+
+            <h3>Introduction</h3>
+            <p>Throughout this course, I've used health-related datasets, such as heart disease and cancer, to try and see how various models could help predict and classify illnesses. I'm continuing that trend here with a diabetes dataset.</p>
+            <h4>The Problem:</h4>
+            <p>Diabetes is a health issue that affects millions of people worldwide; in the United States alone, at least 38 million people have Diabetes, with 98 million having prediabetes.
+            The CDC estimates that 1 in 5 people could have Diabetes and not know it. Diabetes is also the eighth leading cause of death in the United States. Additionally, Diabetes is a growing disease in countries such as the United States, Canada, and India.</p>
+            
+            <p>So, having a model that can accurately classify if someone is likely to have Diabetes or not can help catch Diabetes early, as catching it early and making lifestyle adjustments can lead to a minimal impact on an individual's life.</p>
+
+            <h4>Key Questions:</h4>
+            <p>There are two main questions I hope to find answers to through this project.</p>
+           <ol>
+            <li>What attributes contribute to a diagnosis of Diabetes the most?</li>
+            <li>Can we develop a model to classify a diagnosis based on traits accurately? </li>
+           </ol>
+           <h4>The Goal:</h4>
+           <p>This project aims to look at the diabetes dataset and develop a classifier, initially a Naive Bayes classier, that can accurately classify data into a proper diagnosis and, if needed, go through iterations of the data science pipeline to refine the model and get the highest accuracy score possible.</p>
+
+           <hr>
+
+           <h3>About the Data</h3>
+           <p>The dataset comes from <span><a href="https://www.kaggle.com/datasets/alexteboul/diabetes-health-indicators-dataset/data">Kaggle</a></span>, which is sourced from a CDC survey in 2015. It contains 21 features and just over 250,000 samples, has information from both health and social aspects, and is labeled with a diagnosis of diabetes (2), pre-diabetes (1), or no diabetes (0).</p>
+           <h5>Key Information Summary</h5>
+           <ul>
+            <li>253680 samples</li>
+            <li>all numeric values</li>
+            <li>21 features:
+                <ul>
+                    <li>Blood Pressure</li>
+                    <li>BMI</li>
+                    <li>Geeneral Health</li>
+                    <li>Income</li>
+                    <li>Education</li>
+                    <li>Sex</li>
+                    <li>etc.</li>
+                </ul>
+            </li>
+           </ul>
+           <p>We will take a deeper look into the data, along with some Visualization in the pre-processing and methodolgy section</p>
+           <hr>
+           <h3>Initial Methodolgy (Iteration 1)</h3>
+           <h4>Methodolgy Summary</h4>
+           <p>Initially, I wanted to use a Naive Bayes classifier to model the data. I chose this model because I wanted to get more hands-on experience implementing a Naive Bayes classifier, and I thought it would be a good choice for this dataset.</p>
+           <p>The overall steps would be to:</p>
+           <ol>
+            <li>Pre-process the data</li>
+            <li>Implement the model</li>
+            <li>Evaluate the scoring metric</li>
+            <li>if needed (Spoiler alert, it was), go through another iteration of the pipeline</li>
+           </ol>
+           <h4>Pre-Processing</h4>
+           <div >
+            <div class="row">
+                <div class="col-md-4">
+                    <p>Pre-processing was simple since this was a clean dataset.</p>
+                    <p>As we can see, the data consists entirely of numeric values. When I first checked how many nonnull values were present, I noticed that the number was less than the total samples in the dataset. Indicating the existence of null values</p>
+                    <p>However, the value 0 isn't a null value but rather the value used to show the lack of a feature in the sample, not a missing data point. So, instead, I checked to see if any columns had empty values; using <span><a href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.isna.html">.isna().any()</a></span> instead, as seen on the leftmost image, no values were missing.</p>
+                </div>
+
+                <div class="col-md-4">
+                    <p><i>results of diabetes_df.info()</i></p>
+                    <img src="imgs/final-project/diabetes_df_info.png" class="img-fluid" style="max-height: 60%;">
+                </div>
+
+                <div class="col-md-4">
+                    <p><i>results of diabetes_df.isna().any()</i></p>
+                    <img src="imgs/final-project/isnaany.png"  class="img-fluid" style="max-height: 60%;">
+                </div>
+            </div>  
+
+           </div>
+           <h4>Data Visualization</h4>
+           <p>After data cleaning and pre-processing, I wanted to visualize some aspects of the data to help get a better understanding and hopefully answer one of my original questions for this project.</p>
+           <p>Since the goal is to use Naive Bayes, I wanted to see the distribution of the three classes. Below, you see the distribution on the right - 0 for no diabetes, 1 for prediabetes, and 2 for diabetes. We see here that the dataset is unbalanced leaning heavily towards the class for a negative diabetes diagnosis. At first, I didn't think this would pose a problem. I would later find out that it would, but we will talk about that later. </p>
+           <p>Next, I wanted to look at how features correlated with each other; given the matrix, we see that all features are around the same range in relation to the target value. The most highly correlated features are general health, physical health, BMI, blood pressure, and cholesterol. The lowest correlated items were what I would classify as social features, such as income and education.</p>
+           <p>This answers the first question we had. What attributes contribute to a diagnosis of Diabetes the most? Well, in order, it seems that the top 10 correlated attributes are general health, high blood pressure, BMI, difficulty walking, high cholesterol, age, heart attack, physical health, stroke, and mental health.</p>
+           <div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <img src="imgs/final-project/original-dist.png" style="height: 400px; width: 400px; margin-right: 20%;">
+                    </div>
+                    <br>
+                    <br>
+                    <div class="col-md-4">
+                        <img src="imgs/final-project/heatmap.png"style="height: 400px; width: 400px; margin-right: 50%;">
+                    </div>
+                </div>
+           </div>
+           <br>
+           <h4>Modeling - Naive Bayes Classifer</h4>
+           <p>Knowing the dataset to be unbalanced, I looked into different classifiers to help deal with that. Knowing I wanted to use Naive Bayes, I looked into <span><a href="https://scikit-learn.org/stable/modules/naive_bayes.html">sci-kit learns documentation pages</a></span> for their naive Bayes classifiers. There, I found two methods that would work with an unbalanced dataset.</p>
+           <ul>
+            <li>Multinomial Naive Bayes</li>
+            <li>Categorical Naive Bayes</li>
+           </ul>
+           <p>For all models used I did a train test split of 20/80 with a random seed of 42</p>
+           <p>After spliting the data I fit and predicted for the two classifiers to see which one preformed better</p>
+           <h4>Evaluation - Accuracy</h4>
+           <p>Originally I decided to use accuracy as the scoring metric, with the goal to get the model with the highest accuracy</p>
+           <p>Of the two Categorical Naive Bayes scored the higher in accuracy. Results for both are below</p>
+           <p><i>Categorical Naive Bayes</i></p>
+           <img src="imgs/final-project/1-categorical.png" alt="">
+           <p><i>Multinomial Naive Bayes</i></p>
+           <img src="imgs/final-project/1-multinomial.png" alt="">
+
+           <p>Both of these results are not the best, what can we do better?</p>
+           <hr>
+           <h3>Iteration 2</h3>
+           <p>I wanted to try and get a higher accuracy score for one of the models; however, figuring out how the models were performing based only on accuracy score was difficult, so I added the F1 score as well as the confusion matrix along with it to get a better look at it.</p>
+           <p>Multinomial & Categorical Naive Bayes both suffered form a low F1 score and when looking at the confusion matrix's we see that both models have a high True Postive rate for the classes.</p>
+           <div>
+            <div class="row">
+                <div class="col-md-4">
+                    <p><i>Categorical Naive Bayes</i></p>
+                    <img src="imgs/final-project/f1-categorical.png" style="height: 400px; width: 400px; margin-right: 20%;">
+                </div>
+                <br>
+                <br>
+                <div class="col-md-4">
+                    <p><i>Multinomial Naive Bayes</i></p>
+                    <img src="imgs/final-project/f1-multinomial.png"style="height: 400px; width: 400px; margin-right: 50%;">
+                </div>
+            </div>
+            </div>
+
+            <h4>Combining Classes</h4>
+            <p>I interpreted that the models were having a hard time differentiating between prediabetes and diabetes, so I went back to the pre-processing steps to combine the two classes to improve the scoring metrics.</p>
+            <p>Thankfully the same source where I got the original dataset, also provided the same dataset with the same samples and features but with just two classes instead, 0 for no diabetes and 1 for diabetes and pre-diabetes</p>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <p><i>Original Distribution</i></p>
+                    <img src="imgs/final-project/original-dist.png" style="height: 400px; width: 400px; margin-right: 20%;">
+                </div>
+                <br>
+                <br>
+                <div class="col-md-4">
+                    <p><i>Combined Distribution</i></p>
+                    <img src="imgs/final-project/combined-dist.png"style="height: 400px; width: 400px; margin-right: 50%;">
+                </div>
+            </div>
+
+            <h4>Evaluation</h4>
+            <p>After combinding the dataset and doing the same train test split. I reran the models resulting in the following</p>
+            <div class="row">
+                <div class="col-md-4">
+                    <p><i>Categorical Naive Bayes</i></p>
+                    <img src="imgs/final-project/2-cat-score.png" style="height: 400px; width: 400px; margin-right: 20%;">
+                </div>
+                <br>
+                <br>
+                <div class="col-md-4">
+                    <p><i>Multinomial Naive Bayes</i></p>
+                    <img src="imgs/final-project/2-mult-score.png"style="height: 400px; width: 400px; margin-right: 50%;">
+                </div>
+            </div>
+
+            <p>The F1 scores were significantly better. Indicating that the model was originally having issues differentiating between diabetes and prediabetes. Its performing better but still not the best, ideally I wanted a accuracy score of closer to 90%</p>
+            <hr>
+            <h3>Iteration 3</h3>
+            <p>Let's look back at the data science pipeline. I have the data; it's cleaned, and I've reduced what we can. It may be the Naive Bayes Classifier that is the issue. So, I experimented with a different model to get a higher accuracy score.</p>
+            <h4>Modeling - Support Vector Machine</h4>
+            <p>I decided to experiment with using a support vector classier to see if it will preform better I chose a SVM due to the following</p>
+            <ul>
+                <li>Great for classification problems</li>
+                <li>Great for datasets with a lot of features</li>
+                <li>Can handle both linear and non linear data</li>
+            </ul>
+
+            <h4>SVM - Running & Evaluation</h4>
+            <div >
+                <div class="row">
+                    <div class="col-md-4">
+                        <p>I used sci-kit learns SVM class to create a classier using a 20/80 train test split I fit and predicted the train data and scored it using the same methods as before</p>
+                        <p>It resulted in the highest accuracy score yet! however still alow F1 score and high True postive rate</p>
+                        <p>Why this might be? we will talk about that in the next section</p>
+                        <p>For now I am satisfied with the models accuracy</p>
+                    </div>
+    
+                    <div class="col-md-4">
+                        <p><i>SVM Scoring</i></p>
+                        <img src="imgs/final-project/svm-1.png" style="max-width: 150%; max-height: 80%;">
+                    </div>
+                </div>
+            </div>    
+
+            <hr>
+            <h3>Conclussion & Storytelling</h3>
+            <p>Through this project, I gained insight into classification models, specifically Naive Bayes classifiers; I went through multiple iterations of the data science pipeline and refined the processes to create a model that can accurately classify diabetes diagnosis.</p>
+            <p>The project showed what attributes contributed the most to diabetes. It is also possible to create a high-performing model to classify diabetes - granted, you refine the data and take the time to find a model that works best. For this project, it turned out to be a support vector machine, not a Naive Bayes classifier.  Answering the two original questions</p>
+
+            <h4>Next Steps/What Would I Do Different?</h4>
+            <p>Every model created for this project was able to score high accuracy but produced a low F1 score, and the confusion matrixes showed a high True Positive rate.</p>
+            <p>Given this, accuracy was probably not the best metric to go off of initially. I shouldve focused primarily on the F1 score as it considers precision and recall and can provide a more detailed metric than accuracy.</p>
+            <p>Additionally, the high true positive rate could result from unbalanced data. If I were to go through one more iteration, I would focus more on standardizing the data to try to get a more balanced dataset either by randomly sampling or finding a way to gather more data and seeing if the more balanced dataset performed better when classifying both classes of diabetes and no diabetes and get a better balance of True Positive and True Negative.</p>
+            <hr>
+            <h3>Impact</h3>
+            <p>There are a few potential impacts of a model that can accurately predict diabetes and know what attributes correlate to diabetes. </p>
+            <p>As stated at the start of this project, 1 in 5 people could have diabetes and not know it, but having a well-performing model that can accurately classify a diagnosis could help people. Early diagnosis can allow people to make lifestyle adjustments and have a minimal impact on the disease. Additionally, knowing what attributes correlate to diabetes can help people know what to look out for as well as draw educated conclusions on areas that might also contribute to a diagnosis. </p>    
+            <p>However, there is also a major negative impact; by having a model that can classify if someone has diabetes or not, health insurance companies could use this information to raise rates of people they suspect could have a diagnosis of diabetes. Additionally, models like these require a lot of data to train; if the data is not ethically sourced, it could lead to an unfair bias towards certain groups. </p>
+        
+            <hr>
+            <h3>Sources</h3>
+            <ul>
+                <li>https://www.cdc.gov/diabetes/basics/quick-facts.html</li>
+                <li>https://scikit-learn.org/stable/modules/naive_bayes.html</li>
+                <li>https://scikit-learn.org/stable/modules/svm.html</li>
+                <li>https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.isna.html</li>
+                <li>https://www.kaggle.com/datasets/alexteboul/diabetes-health-indicators-dataset/data</li>
+            </ul>
+
+            <hr>
+            <h3>Code</h3>
+            <a href="https://github.com/sean-coyle/ITCS-3162-Final-Project">Code can be found here</a>
+        </div>
+
+   
+    </body>
+</html>
